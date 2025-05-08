@@ -35,7 +35,7 @@ test_o, test_d, target_px_values, total_data = dataset.get_rays()
 
 # Load trained model
 logger.info("Loading trained model...")
-model = torch.load('/home/eiyike/New_Vanilla_Nerf/nerf_final_model2.pth').to(device)
+model = torch.load('/home/eiyike/New_Vanilla_Nerf/nerf_final_model3.pth').to(device)
 model.eval()  # Set model to evaluation mode
 
 # Function to convert MSE to PSNR

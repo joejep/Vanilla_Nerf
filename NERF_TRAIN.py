@@ -75,8 +75,8 @@ logger.info("Starting training...")
 training_loss = training(model, optimizer, scheduler, tn, tf, nb_bins, nb_epochs, dataloader, device=device)
 
 # Save the final model
-torch.save(model.cpu(), 'nerf_final_model2.pth')
-logger.info("Model saved to 'nerf_final_model2.pth'.")
+torch.save(model.cpu(), 'nerf_final_model4.pth')
+logger.info("Model saved to 'nerf_final_model4.pth'.")
 
 # Plot and save training loss
 plt.plot(training_loss)

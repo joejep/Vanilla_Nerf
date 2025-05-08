@@ -161,6 +161,34 @@ def compute_accumulated_transmittance(betas):
     return torch.cat((torch.ones(accumulated_transmittance.shape[0], 1, device=betas.device),
                      accumulated_transmittance[:, :-1]), dim=1)
 
+def sample_points_on_rays(origins, directions, near=2.0, far=8.0, n_samples=100, device='cuda'):
+    n_rays = origins.shape[0]
+    
+    t = torch.linspace(near, far, n_samples, device=device)
+    t = t.repeat(n_rays, 1)  # Shape: [n_rays, n_samples]
+
+    delta_t = (far - near) / (n_samples - 1)
+    delta_t = torch.ones(n_samples, device=device) * delta_t
+    delta_t = delta_t.repeat(n_rays, 1)
+    
+    directions_expanded = directions.unsqueeze(1)  
+    t_expanded = t.unsqueeze(2)  
+    origins_expanded = origins.unsqueeze(1)  
+    
+    points = origins_expanded + directions_expanded * t_expanded  
+    points_flat = points.reshape(-1, 3)
+    
+    ray_indices = torch.arange(n_rays, device=device).repeat_interleave(n_samples)
+
+    directions_at_points = directions.repeat_interleave(n_samples, dim=0)
+    
+   
+    distances_flat = t.flatten()
+    delta_distances_flat = delta_t.flatten()
+    
+    return points_flat, ray_indices, directions_at_points, distances_flat, delta_distances_flat
+
+
 def rendering(model, rays_o, rays_d, tn, tf, nb_bins=100, device='cpu', white_bckgr=True):
     """
     Render the color of rays using volume rendering.
@@ -186,9 +214,13 @@ def rendering(model, rays_o, rays_d, tn, tf, nb_bins=100, device='cpu', white_bc
     # Sample points along the rays
     t = torch.linspace(tn, tf, nb_bins, device=device)  # [nb_bins]
     delta = torch.cat((t[1:] - t[:-1], torch.tensor([1e10], device=device)))  # [nb_bins]
+    sampled_points, ray_indices, ray_directions, distances, delta_distances = sample_points_on_rays(
+            rays_o, rays_d, near=tn, far=tf, n_samples=nb_bins, device=device
+        )
+    sampled_points = sampled_points.reshape((rays_o.shape[0], nb_bins, 3))
     
-    # Compute sampled points along the rays
-    sampled_points = rays_o.unsqueeze(1) + t.unsqueeze(0).unsqueeze(-1) * rays_d.unsqueeze(1)  # [num_rays, nb_bins, 3]
+    # # Compute sampled points along the rays
+    # sampled_points = rays_o.unsqueeze(1) + t.unsqueeze(0).unsqueeze(-1) * rays_d.unsqueeze(1)  # [num_rays, nb_bins, 3]
    
     
     # Reshape points and directions for network input

@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from new_datasets import data_preprocessing
 from model2 import SplitNeRF
 import rendering
-import rendering2
+# import rendering2
 import logging
 import cProfile
 
@@ -19,8 +19,8 @@ logger = logging.getLogger(__name__)
 # Clear GPU cache
 torch.cuda.empty_cache()
 
-# Dataset and model parameters
-data_set_path = '/home/eiyike/DATA/vanilla_dataset'
+# Dataset and training parameters
+data_set_path = '/home/eiyike/DATA/FINAL_DATA'
 mode = 'test'
 target_size = (400, 400)
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -35,7 +35,7 @@ test_o, test_d, target_px_values, total_data = dataset.get_rays()
 
 # Load trained model
 logger.info("Loading trained model...")
-model = torch.load('/home/eiyike/New_Vanilla_Nerf/nerf_final_model3.pth').to(device)
+model = torch.load('/home/eiyike/Documents/Vanilla_Nerf/checkpoints/final_checkpoint.pth').to(device)
 model.eval()  # Set model to evaluation mode
 
 # Function to convert MSE to PSNR

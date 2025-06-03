@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 torch.cuda.empty_cache()
 
 # Dataset and training parameters
-data_set_path = '/home/eiyike/DATA/vanilla_dataset'
+data_set_path = '/home/eiyike/DATA/FINAL_DATA'
 mode = 'train'
 target_size = (400, 400)
 batch_size = 1024
@@ -26,7 +26,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 # Hyperparameters
 tn = 2
 tf = 8
-nb_epochs = 5
+nb_epochs = 10
 lr = 1e-3
 gamma = 0.5
 nb_bins = 100

@@ -1,0 +1,20 @@
+{
+  "total_epochs": 10,
+  "final_loss": 0.00015633544535376132,
+  "total_loss_points": 200000,
+  "hyperparameters": {
+    "tn": 2,
+    "tf": 8,
+    "lr": 0.001,
+    "gamma": 0.5,
+    "nb_bins": 100,
+    "batch_size": 1024,
+    "target_size": [
+      400,
+      400
+    ]
+  },
+  "model_path": "nerf_final_model4.pth",
+  "checkpoint_path": "checkpoints/final_checkpoint.pth",
+  "training_method": "periodic_checkpoints"
+}
